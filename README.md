@@ -2,7 +2,7 @@
 
 一款用 **Three.js** 编写的 3D 打怪升级射击小游戏，纯前端、零依赖、单文件逻辑，打开网页即可游玩。
 
-🎮 **在线试玩：** https://USERNAME.github.io/REPO/
+🎮 **在线试玩：** https://lsj678-beep.github.io/interstellar-swarm/
 
 ## 玩法
 
