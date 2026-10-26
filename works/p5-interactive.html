@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>作品二 · 流光画板（p5.js 交互）</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #06080f; overflow: hidden; }
+  main { display: flex; align-items: center; justify-content: center; height: 100vh; }
+</style>
+<script src="../libs/p5.min.js"></script>
+</head>
+<body>
+<script>
+'use strict';
+/* ============================================================
+   作品二：流光画板（交互作品）
+   ------------------------------------------------------------
+   操作：
+     按住鼠标拖动 —— 画出流光轨迹
+     点击 / C 键  —— 切换配色
+     滚轮 / ↑↓   —— 笔刷粗细
+     空格         —— 清空画布
+   原理：沿鼠标轨迹撒粒子，粒子带速度与寿命，
+         用「叠加混合 + 拖尾画布」营造发光流动感。
+   ============================================================ */
+
+// 四套配色：0 星云 / 1 极光 / 2 熔岩 / 3 深海
+const PALETTES = [
+  { name: '星云', bg: 12, colors: [[168, 120, 255], [255, 121, 198], [ 80, 170, 255], [255, 255, 255]] },
+  { name: '极光', bg: 8,  colors: [[  6, 214, 160], [137, 255, 180], [ 17, 138, 178], [220, 255, 220]] },
+  { name: '熔岩', bg: 10, colors: [[255,  99,  71], [255, 180,  60], [239,  71, 111], [255, 230, 180]] },
+  { name: '深海', bg: 6,  colors: [[  0, 180, 216], [  0, 119, 182], [  3,  90, 160], [180, 230, 255]] },
+];
+
+let particles = [];   // 活跃粒子池
+let palIndex = 0;     // 当前配色
+let brush = 14;       // 笔刷强度（影响每次生成的粒子数与散布）
+let frame = 0;
+
+function setup() {
+  createCanvas(800, 520);
+  pixelDensity(2);
+  colorMode(RGB, 255);
+  background(6, 8, 15);
+  textAlign(CENTER, CENTER);
+}
+
+function draw() {
+  // 每帧盖一层半透明底色 → 旧轨迹慢慢沉下去，新的轨迹在发光
+  noStroke();
+  const b = PALETTES[palIndex].bg;
+  fill(6, 8, 15, b);
+  rect(0, 0, width, height);
+
+  // 按住鼠标：沿轨迹生成粒子
+  if (mouseIsPressed) {
+    const n = floor(map(brush, 4, 30, 2, 7));
+    for (let i = 0; i < n; i++) {
+      particles.push(makeParticle(mouseX, mouseY, pmouseX, pmouseY));
+    }
+  }
+
+  // 更新 & 绘制粒子（倒序遍历，方便安全删除）
+  blendMode(ADD);                       // 叠加混合 = 发光感的关键
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx;  p.y += p.vy;
+    p.vx *= 0.96; p.vy *= 0.96;         // 阻尼
+    p.vy += 0.015;                      // 一点点重力，让光往下飘
+    p.life--;
+    if (p.life <= 0) { particles.splice(i, 1); continue; }
+
+    const a = map(p.life, 0, p.maxLife, 0, 160);
+    fill(p.c[0], p.c[1], p.c[2], a);
+    circle(p.x, p.y, p.r * (p.life / p.maxLife) + 0.6);
+  }
+  blendMode(BLEND);
+
+  // 底部提示（跟随当前配色）
+  push();
+  const pal = PALETTES[palIndex];
+  fill(255, 255, 255, 90);
+  textSize(12);
+  text('拖动鼠标画流光 · 点击换配色（当前：' + pal.name + '）· 滚轮调笔刷 · 空格清空',
+       width / 2, height - 18);
+  pop();
+  frame++;
+}
+
+/* 沿鼠标移动方向生成一颗粒子 */
+function makeParticle(x, y, px, py) {
+  const pal = PALETTES[palIndex];
+  const dx = x - px, dy = y - py;
+  const speed = min(sqrt(dx * dx + dy * dy), 30);
+  const spread = map(brush, 4, 30, 1.5, 9);   // 笔刷越粗，散布越大
+  return {
+    x: x + random(-spread, spread),
+    y: y + random(-spread, spread),
+    vx: dx * 0.18 + random(-0.6, 0.6),
+    vy: dy * 0.18 + random(-0.6, 0.6),
+    r: random(3, 9) + brush * 0.12,
+    c: random(pal.colors),
+    life: floor(random(30, 90)),
+    maxLife: 90,
+    _speed: speed,
+  };
+}
+
+/* 点击 = 换配色（顺便在点击处爆一圈火花） */
+function mousePressed() {
+  if (mouseY > height - 34) return;   // 提示栏区域点击不算
+  palIndex = (palIndex + 1) % PALETTES.length;
+  const pal = PALETTES[palIndex];
+  for (let i = 0; i < 40; i++) {
+    const p = makeParticle(mouseX, mouseY, mouseX, mouseY);
+    const ang = random(TWO_PI);
+    p.vx = cos(ang) * random(1, 4);
+    p.vy = sin(ang) * random(1, 4);
+    p.life = floor(random(20, 50));
+    particles.push(p);
+  }
+}
+
+function mouseWheel(e) {              // 滚轮调笔刷
+  brush = constrain(brush - e.deltaY * 0.02, 4, 30);
+  return false;
+}
+
+function keyPressed() {
+  if (key === ' ') {                  // 清空
+    background(6, 8, 15);
+    particles = [];
+  } else if (key === 'c' || key === 'C') {
+    palIndex = (palIndex + 1) % PALETTES.length;
+  } else if (keyCode === UP_ARROW) {
+    brush = constrain(brush + 2, 4, 30);
+  } else if (keyCode === DOWN_ARROW) {
+    brush = constrain(brush - 2, 4, 30);
+  }
+}
+</script>
+</body>
+</html>
