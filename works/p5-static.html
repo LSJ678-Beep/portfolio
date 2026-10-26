@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>作品一 · 夜色街区（p5.js 静态）</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #0b1020; overflow: hidden; }
+  /* 让画布在页面里水平垂直居中 */
+  main { display: flex; align-items: center; justify-content: center; height: 100vh; }
+</style>
+<script src="../libs/p5.min.js"></script>
+</head>
+<body>
+<script>
+'use strict';
+/* ============================================================
+   作品一：夜色街区 · 生成海报（静态）
+   ------------------------------------------------------------
+   每次刷新页面，随机种子都会换一个，于是得到一张全新海报；
+   画面本身没有任何动画（noLoop），属于静态作品。
+   结构：渐变夜空 → 星星 → 月亮 → 远山 → 楼宇 → 霓虹窗灯 → 颗粒
+   ============================================================ */
+
+// 调色板：夜空的三个关键色 + 霓虹色组
+const SKY_TOP    = [24, 28, 62];
+const SKY_MID    = [58, 34, 92];
+const SKY_BOTTOM = [142, 62, 92];
+const NEON = [
+  [255, 209, 102],   // 暖黄
+  [239,  71, 111],   // 玫红
+  [  6, 214, 160],   // 薄荷绿
+  [ 17, 138, 178],   // 湖蓝
+  [255, 159,  28],   // 橙
+];
+let W = 800, H = 520;   // 海报尺寸
+
+function setup() {
+  createCanvas(W, H);
+  pixelDensity(2);            // 高分屏更细腻
+  randomSeed(floor(random(1e9)));   // 随机种子：决定整张海报
+  noiseSeed(random(1e9));
+  noLoop();                   // 静态：只画一帧
+  noStroke();
+  drawScene();
+}
+
+function drawScene() {
+  drawSky();
+  drawStars();
+  drawMoon();
+  drawMountains();
+  drawCity();
+  drawGrain();
+}
+
+/* ---- 渐变夜空 ---- */
+function drawSky() {
+  for (let y = 0; y < H; y++) {
+    const t = y / H;
+    let c;
+    if (t < 0.55) {
+      c = lerpColor3(SKY_TOP, SKY_MID, t / 0.55);
+    } else {
+      c = lerpColor3(SKY_MID, SKY_BOTTOM, (t - 0.55) / 0.45);
+    }
+    fill(c[0], c[1], c[2]);
+    rect(0, y, W, 1);
+  }
+}
+
+/* 三个颜色分量各自线性插值 */
+function lerpColor3(a, b, t) {
+  return [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+}
+
+/* ---- 星星：上半夜多一些 ---- */
+function drawStars() {
+  const n = 130;
+  for (let i = 0; i < n; i++) {
+    const x = random(W);
+    const y = random(H * 0.55);
+    const r = random(0.4, 1.6);
+    fill(255, 255, 255, random(80, 220));
+    circle(x, y, r * 2);
+  }
+}
+
+/* ---- 月亮 + 光晕 ---- */
+function drawMoon() {
+  const mx = random(W * 0.62, W * 0.85);
+  const my = random(H * 0.10, H * 0.22);
+  const mr = random(26, 40);
+  // 三层光晕
+  for (let g = 3; g >= 1; g--) {
+    fill(255, 240, 210, 22);
+    circle(mx, my, mr * (1 + g * 0.9));
+  }
+  fill(255, 244, 214);
+  circle(mx, my, mr * 2);
+  // 月面阴影（月牙感）
+  fill(SKY_MID[0], SKY_MID[1], SKY_MID[2], 90);
+  circle(mx + mr * 0.5, my - mr * 0.3, mr * 1.6);
+}
+
+/* ---- 远山：两层柏林噪声剪影 ---- */
+function drawMountains() {
+  drawRidge(H * 0.62, H * 0.10, [46, 36, 80], 0.004);
+  drawRidge(H * 0.70, H * 0.08, [30, 26, 58], 0.007);
+}
+
+function drawRidge(baseY, amp, col, scale) {
+  fill(col[0], col[1], col[2]);
+  beginShape();
+  vertex(0, H);
+  for (let x = 0; x <= W; x += 4) {
+    const y = baseY - noise(x * scale) * amp * 2;
+    vertex(x, y);
+  }
+  vertex(W, H);
+  endShape(CLOSE);
+}
+
+/* ---- 楼宇：三层，越近越高越暗 ---- */
+function drawCity() {
+  drawBuildingRow(H * 0.78, H * 0.30, [22, 20, 44],  46, 0.55, 0.25);
+  drawBuildingRow(H * 0.86, H * 0.42, [14, 13, 30],  60, 0.75, 0.45);
+  drawBuildingRow(H * 0.96, H * 0.55, [8, 8, 18],    78, 0.95, 0.7);
+}
+
+function drawBuildingRow(baseY, maxH, col, maxW, topRatio, litRatio) {
+  let x = -10;
+  while (x < W + 10) {
+    const bw = random(24, maxW);              // 楼宽
+    const bh = random(maxH * topRatio, maxH); // 楼高
+    const bx = x, by = baseY - bh;
+    fill(col[0], col[1], col[2]);
+    rect(bx, by, bw, bh);
+    // 楼顶天线（小概率）
+    if (random() < 0.18) {
+      rect(bx + bw / 2 - 1, by - random(10, 26), 2, 30);
+    }
+    // 霓虹窗灯：按概率点亮小格子
+    const cols = floor(bw / 9);
+    const rows = floor(bh / 12);
+    for (let cx = 0; cx < cols; cx++) {
+      for (let cy = 0; cy < rows; cy++) {
+        if (random() < litRatio * 0.35) {
+          const nc = random(NEON);
+          fill(nc[0], nc[1], nc[2], random(120, 255));
+          rect(bx + 4 + cx * 9, by + 6 + cy * 12, 3.5, 5);
+        }
+      }
+    }
+    x += bw + random(2, 10);
+  }
+}
+
+/* ---- 颗粒质感：撒一层半透明噪点，让海报不"数码味" ---- */
+function drawGrain() {
+  for (let i = 0; i < 2600; i++) {
+    fill(255, 255, 255, random(0, 14));
+    circle(random(W), random(H), random(0.5, 1.4));
+  }
+  // 底部渐隐
+  for (let y = H - 60; y < H; y++) {
+    fill(0, 0, 0, map(y, H - 60, H, 0, 90));
+    rect(0, y, W, 1);
+  }
+}
+</script>
+</body>
+</html>
