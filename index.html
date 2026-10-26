@@ -5,113 +5,185 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>鲁少俊 · 互动编程作品集</title>
 <style>
+  :root {
+    --bg: #07080d;
+    --bg-soft: #0c0e16;
+    --line: rgba(255, 255, 255, .07);
+    --line-strong: rgba(255, 255, 255, .12);
+    --txt: #eceae9;
+    --muted: #8e8ba0;
+    --muted-2: #5f5d70;
+    --accent: #a78bfa;   /* 紫 */
+    --accent-2: #67e8f9; /* 青 */
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
     font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
-    background: #06080f;
-    color: #e8eefc;
-    line-height: 1.6;
+    background: var(--bg);
+    color: var(--txt);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
   }
-  a { color: #5eead4; text-decoration: none; }
-  .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 0 24px; }
 
   /* ---------- 顶部导航 ---------- */
   nav {
-    position: sticky; top: 0; z-index: 10;
-    background: rgba(6, 8, 15, .82); backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(94, 234, 212, .12);
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(7, 8, 13, .72);
+    backdrop-filter: blur(14px) saturate(120%);
+    border-bottom: 1px solid var(--line);
   }
-  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; }
-  .logo { font-weight: 700; letter-spacing: .08em; color: #fff; }
-  .logo span { color: #5eead4; }
-  nav .links a { color: #9fb3d1; font-size: 14px; margin-left: 22px; }
-  nav .links a:hover { color: #5eead4; }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 58px; }
+  .logo { font-size: 14px; letter-spacing: .22em; color: var(--txt); }
+  .logo i { font-style: normal; color: var(--muted-2); margin: 0 6px; }
+  nav .links { display: flex; gap: 26px; }
+  nav .links a {
+    font-size: 13px; color: var(--muted); letter-spacing: .04em;
+    padding: 4px 0; border-bottom: 1px solid transparent; transition: .2s;
+  }
+  nav .links a:hover { color: var(--txt); border-bottom-color: var(--accent); }
 
   /* ---------- 首屏 ---------- */
-  header {
-    padding: 96px 0 72px; text-align: center;
-    background: radial-gradient(ellipse at 50% -20%, #1a2a4a 0%, #0b1224 55%, #06080f 100%);
-    border-bottom: 1px solid rgba(255, 255, 255, .05);
+  header { position: relative; padding: 132px 0 118px; overflow: hidden; }
+  /* 顶部一层极淡的紫青光晕，只用一处，克制 */
+  header::before {
+    content: ''; position: absolute; inset: -40% 0 auto 0; height: 620px;
+    background:
+      radial-gradient(38% 52% at 50% 30%, rgba(167, 139, 250, .16), transparent 70%),
+      radial-gradient(30% 40% at 62% 18%, rgba(103, 232, 249, .10), transparent 70%);
+    pointer-events: none;
   }
-  .badge {
-    display: inline-block; padding: 5px 14px; border-radius: 999px;
-    font-size: 12px; letter-spacing: .16em; color: #5eead4;
-    border: 1px solid rgba(94, 234, 212, .35); background: rgba(94, 234, 212, .07);
-    margin-bottom: 22px;
+  header .wrap { position: relative; }
+
+  .kicker {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 12.5px; letter-spacing: .3em; color: var(--muted);
+    margin-bottom: 26px;
   }
-  h1 { font-size: 44px; letter-spacing: .08em; font-weight: 700; }
-  h1 em {
-    font-style: normal;
-    background: linear-gradient(135deg, #fff 20%, #7dd3fc 60%, #5eead4 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  .kicker::before {
+    content: ''; width: 34px; height: 1px;
+    background: linear-gradient(90deg, var(--accent), transparent);
   }
-  .intro { margin-top: 16px; font-size: 16.5px; color: #8ea3c4; }
-  .hero-links { margin-top: 34px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-  .hero-links a {
-    padding: 11px 26px; border-radius: 12px; font-size: 14.5px; letter-spacing: .05em;
-    border: 1px solid rgba(94, 234, 212, .4); color: #5eead4;
-    transition: all .18s ease;
+  h1 {
+    font-size: clamp(32px, 5.4vw, 52px);
+    line-height: 1.3; font-weight: 600; letter-spacing: .01em;
+    max-width: 15em;
   }
-  .hero-links a:hover { background: rgba(94, 234, 212, .12); transform: translateY(-2px); }
-  .hero-links a.solid {
-    background: linear-gradient(135deg, #5eead4, #38bdf8); color: #041419;
-    border: 0; font-weight: 600; box-shadow: 0 8px 26px rgba(56, 189, 248, .3);
+  h1 .grad {
+    background: linear-gradient(100deg, #fff 6%, var(--accent) 52%, var(--accent-2) 96%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .intro {
+    margin-top: 22px; max-width: 34em;
+    font-size: 15px; color: var(--muted); line-height: 1.9;
+  }
+  .actions { margin-top: 40px; display: flex; align-items: center; gap: 26px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 13px 26px; border-radius: 999px; font-size: 14px; letter-spacing: .06em;
+    background: linear-gradient(100deg, var(--accent), var(--accent-2));
+    color: #0a0a12; font-weight: 600;
+    transition: transform .2s ease, box-shadow .2s ease;
+    box-shadow: 0 8px 26px rgba(167, 139, 250, .22);
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(167, 139, 250, .34); }
+  .btn-ghost {
+    font-size: 13.5px; color: var(--muted); letter-spacing: .06em;
+    border-bottom: 1px solid var(--line-strong); padding-bottom: 3px; transition: .2s;
+  }
+  .btn-ghost:hover { color: var(--txt); border-bottom-color: var(--accent); }
+
+  /* ---------- 作品 ---------- */
+  .works { border-top: 1px solid var(--line); }
+  section.work { padding: 92px 0 12px; }
+  .sec-head {
+    display: grid; grid-template-columns: 54px 1fr; gap: 18px; align-items: start;
+    margin-bottom: 26px;
+  }
+  .idx {
+    font-size: 13px; color: var(--muted-2); letter-spacing: .12em;
+    padding-top: 9px; font-variant-numeric: tabular-nums;
+  }
+  .idx::after { content: ''; display: block; width: 22px; height: 1px;
+    background: var(--line-strong); margin-top: 10px; }
+  .tag {
+    font-size: 11.5px; letter-spacing: .24em; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 7px;
+  }
+  h2 { font-size: 27px; font-weight: 600; letter-spacing: .02em; }
+  .one-line { margin-top: 9px; font-size: 14.5px; color: var(--muted); max-width: 40em; }
+
+  .stage {
+    border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+    background: var(--bg-soft);
+    box-shadow: 0 24px 70px -30px rgba(0, 0, 0, .9);
+  }
+  .stage iframe {
+    width: 100%; height: 520px; border: 0; display: block; background: var(--bg-soft);
+  }
+  .stage .bar {
+    display: flex; align-items: center; gap: 7px;
+    padding: 11px 16px; border-top: 1px solid var(--line);
+    font-size: 12px; color: var(--muted-2); letter-spacing: .04em;
+  }
+  .stage .bar i {
+    width: 6px; height: 6px; border-radius: 50%; background: #34d399;
+    box-shadow: 0 0 8px rgba(52, 211, 153, .8); flex: none;
   }
 
-  /* ---------- 作品区 ---------- */
-  section.work { padding: 66px 0 8px; }
-  .work-tag {
-    font-size: 12px; letter-spacing: .2em; color: #7dd3fc; margin-bottom: 8px;
+  /* 四行信息：不用色块 chip，改细线与字距，更安静 */
+  .specs {
+    margin-top: 24px; border-top: 1px solid var(--line);
   }
-  h2 { font-size: 25px; letter-spacing: .04em; margin-bottom: 6px; }
-  .one-line { color: #9fb3d1; font-size: 14.5px; margin-bottom: 18px; }
-
-  .frame-box {
-    border: 1px solid rgba(125, 211, 252, .18); border-radius: 14px;
-    overflow: hidden; background: #0b1020;
-    box-shadow: 0 18px 50px rgba(0, 0, 0, .45);
+  .specs .r {
+    display: grid; grid-template-columns: 92px 1fr; gap: 16px;
+    padding: 14px 2px; border-bottom: 1px solid var(--line);
   }
-  .frame-box iframe { width: 100%; height: 520px; border: 0; display: block; background: #0b1020; }
-  .frame-tip {
-    padding: 8px 14px; font-size: 12px; color: #5f728f;
-    border-top: 1px solid rgba(125, 211, 252, .12); background: rgba(6, 8, 15, .6);
-  }
-
-  /* 四行作品信息 */
-  .meta { margin-top: 18px; display: grid; gap: 6px; }
-  .meta .row { display: flex; gap: 12px; font-size: 14px; }
-  .meta .k {
-    flex: none; width: 76px; text-align: center; padding: 2px 0;
-    font-size: 12px; color: #cdeafe; border-radius: 6px;
-    background: rgba(125, 211, 252, .1); border: 1px solid rgba(125, 211, 252, .25);
-    height: fit-content; margin-top: 2px;
-  }
-  .meta .v { color: #b9c7de; }
-  .meta .v b { color: #fff; font-weight: 600; }
+  .specs .k { font-size: 12px; letter-spacing: .16em; color: var(--muted-2); padding-top: 2px; }
+  .specs .v { font-size: 14px; color: #c3c1cf; }
+  .specs .v strong { color: var(--txt); font-weight: 600; }
 
   /* ---------- 关于我 ---------- */
-  #about { padding: 72px 0 90px; }
-  .about-card {
-    border: 1px solid rgba(94, 234, 212, .16); border-radius: 16px;
-    padding: 34px 36px; background: rgba(16, 26, 44, .45);
-    display: grid; grid-template-columns: 1fr 1fr; gap: 20px 40px;
+  about { display: block; }
+  #about { padding: 104px 0 108px; border-top: 1px solid var(--line); }
+  .about-grid {
+    display: grid; grid-template-columns: 200px 1fr; gap: 40px;
+    padding-top: 8px;
   }
-  .about-card h3 {
-    grid-column: 1 / -1; font-size: 20px; letter-spacing: .06em;
-    display: flex; align-items: center; gap: 10px;
+  .about-lead {
+    font-size: 13px; letter-spacing: .22em; color: var(--accent);
+    text-transform: uppercase;
   }
-  .about-card h3::before { content: ''; width: 5px; height: 20px; border-radius: 3px;
-    background: linear-gradient(#5eead4, #38bdf8); }
-  .about-item .label { font-size: 12px; letter-spacing: .14em; color: #5f728f; margin-bottom: 3px; }
-  .about-item .value { font-size: 15px; color: #dbe7fb; }
-  .about-item .value a { border-bottom: 1px dashed rgba(94, 234, 212, .5); }
+  .about-body { display: grid; gap: 22px; }
+  .about-body .row { display: grid; grid-template-columns: 96px 1fr; gap: 18px; }
+  .about-body .k { font-size: 12px; letter-spacing: .16em; color: var(--muted-2); padding-top: 3px; }
+  .about-body .v { font-size: 15px; color: #d5d3e0; }
+  .about-body a {
+    color: var(--accent-2); border-bottom: 1px solid rgba(103, 232, 249, .32);
+    padding-bottom: 1px;
+  }
+  .about-body a:hover { border-bottom-color: var(--accent-2); }
 
-  footer { padding: 26px 0 40px; text-align: center; font-size: 12.5px; color: #5f728f; }
+  footer {
+    border-top: 1px solid var(--line); padding: 30px 0 46px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; color: var(--muted-2); letter-spacing: .06em;
+  }
 
-  @media (max-width: 640px) {
-    h1 { font-size: 30px; }
-    .about-card { grid-template-columns: 1fr; }
-    nav .links a { margin-left: 12px; font-size: 13px; }
+  @media (max-width: 680px) {
+    header { padding: 84px 0 76px; }
+    nav .links { gap: 16px; }
+    nav .links a { font-size: 12px; }
+    .sec-head { grid-template-columns: 1fr; gap: 8px; }
+    .idx::after { display: none; }
+    .specs .r { grid-template-columns: 1fr; gap: 4px; }
+    .about-grid { grid-template-columns: 1fr; gap: 22px; }
+    .about-body .row { grid-template-columns: 1fr; gap: 3px; }
+    .stage iframe { height: 420px; }
+    footer { flex-direction: column; gap: 8px; align-items: flex-start; }
   }
 </style>
 </head>
@@ -119,111 +191,142 @@
 
 <nav>
   <div class="wrap">
-    <div class="logo">鲁少俊<span>·</span>作品集</div>
+    <div class="logo">鲁少俊<i>/</i>作品集</div>
     <div class="links">
-      <a href="#w1">p5 · 静态</a>
-      <a href="#w2">p5 · 交互</a>
-      <a href="#w3">Three.js</a>
-      <a href="#about">关于我</a>
+      <a href="#w1">静态</a>
+      <a href="#w2">交互</a>
+      <a href="#w3">游戏</a>
+      <a href="#about">关于</a>
     </div>
   </div>
 </nav>
 
-<!-- ============ 首页 ============ -->
+<!-- ============ 首屏 ============ -->
 <header>
-  <div class="badge">互动编程 · 课程作品集</div>
-  <h1>你好，我是<em>鲁少俊</em></h1>
-  <p class="intro">数字媒体艺术专业 · 想做「会动的画面」——用代码画画，做能玩的东西。</p>
-  <div class="hero-links">
-    <a class="solid" href="#w1">看作品 ↓</a>
-    <a href="#about">关于我</a>
+  <div class="wrap">
+    <div class="kicker">互动编程 · 数字媒体艺术 · 大二</div>
+    <h1>
+      用代码，<br>
+      <span class="grad">把想法做成会动的画面。</span>
+    </h1>
+    <p class="intro">
+      这里是《互动编程》课程的三件作品：一张每次刷新都不一样的生成海报、
+      一块能随手画出流光的交互画板，还有一款能一直玩下去的 3D 射击小游戏。
+      全部在页面内直接运行，点开就能玩。
+    </p>
+    <div class="actions">
+      <a class="btn" href="#w1">浏览作品</a>
+      <a class="btn-ghost" href="#about">关于我</a>
+    </div>
   </div>
 </header>
 
-<main class="wrap">
+<main class="wrap works">
 
   <!-- ============ 作品一：p5.js 静态 ============ -->
   <section class="work" id="w1">
-    <div class="work-tag">作品 01 · P5.JS 静态</div>
-    <h2>夜色街区 · 生成海报</h2>
-    <p class="one-line">每次刷新都会生成一张独一无二的夜色城市海报，画面本身是静态的。</p>
-
-    <div class="frame-box">
-      <iframe src="works/p5-static.html" loading="lazy" title="夜色街区"></iframe>
-      <div class="frame-tip">内嵌运行中 · 刷新本页即可换一张海报</div>
+    <div class="sec-head">
+      <div class="idx">01</div>
+      <div>
+        <div class="tag">p5.js · 静态</div>
+        <h2>夜色街区 · 生成海报</h2>
+        <p class="one-line">每次刷新都会生成一张独一无二的夜色城市海报，画面本身是静态的。</p>
+      </div>
     </div>
 
-    <div class="meta">
-      <div class="row"><span class="k">标　题</span><span class="v"><b>夜色街区 · 生成海报</b></span></div>
-      <div class="row"><span class="k">说　明</span><span class="v">程序自动生成夜色城市：渐变夜空、噪声远山、三层楼宇和随机点亮的霓虹窗灯。</span></div>
-      <div class="row"><span class="k">创作思路</span><span class="v">用柏林噪声叠出山峦与楼群剪影，随机种子决定整张海报的构图与配色，再叠颗粒质感去掉「数码味」；全程 noLoop 无动画，重心放在一幅画的语言上。</span></div>
-      <div class="row"><span class="k">技　术</span><span class="v">p5.js · Perlin Noise · 随机种子 · noLoop 静态渲染</span></div>
+    <div class="stage">
+      <iframe src="works/p5-static.html" loading="lazy" title="夜色街区"></iframe>
+      <div class="bar"><i></i>内嵌运行中 · 刷新本页即可换一张海报</div>
+    </div>
+
+    <div class="specs">
+      <div class="r"><span class="k">标题</span><span class="v"><strong>夜色街区 · 生成海报</strong></span></div>
+      <div class="r"><span class="k">一句话说明</span><span class="v">程序自动生成夜色城市：渐变夜空、噪声远山、三层楼宇和随机点亮的霓虹窗灯。</span></div>
+      <div class="r"><span class="k">创作思路</span><span class="v">用柏林噪声叠出山峦与楼群剪影，随机种子决定整张海报的构图与配色，再叠一层颗粒质感去掉「数码味」；全程 noLoop 无动画，重心放在一幅画的语言上。</span></div>
+      <div class="r"><span class="k">技术</span><span class="v">p5.js · Perlin Noise · 随机种子 · noLoop 静态渲染</span></div>
     </div>
   </section>
 
   <!-- ============ 作品二：p5.js 交互 ============ -->
   <section class="work" id="w2">
-    <div class="work-tag">作品 02 · P5.JS 交互</div>
-    <h2>流光画板</h2>
-    <p class="one-line">用鼠标拖出发光粒子轨迹，点击换配色，滚轮调笔刷，空格清空——随手「玩」出一张画。</p>
-
-    <div class="frame-box">
-      <iframe src="works/p5-interactive.html" loading="lazy" title="流光画板"></iframe>
-      <div class="frame-tip">内嵌运行中 · 先在画面里按住鼠标拖动试试</div>
+    <div class="sec-head">
+      <div class="idx">02</div>
+      <div>
+        <div class="tag">p5.js · 交互</div>
+        <h2>流光画板</h2>
+        <p class="one-line">鼠标拖出发光粒子轨迹，点击换配色，滚轮调笔刷，空格清空——随手「玩」出一张画。</p>
+      </div>
     </div>
 
-    <div class="meta">
-      <div class="row"><span class="k">标　题</span><span class="v"><b>流光画板</b></span></div>
-      <div class="row"><span class="k">说　明</span><span class="v">按住鼠标拖动会撒出发光粒子，粒子带惯性缓慢下坠；四套配色一键切换，滚轮实时调整笔刷粗细。</span></div>
-      <div class="row"><span class="k">创作思路</span><span class="v">粒子沿鼠标轨迹生长、漂移、淡出，用「叠加混合 + 半透明拖尾」做出流光质感；把配色、笔刷、清屏都做成即时反馈，让人玩着玩着就画出一幅完整的光绘。</span></div>
-      <div class="row"><span class="k">技　术</span><span class="v">p5.js · 粒子系统 · blendMode(ADD) 叠加发光 · 鼠标/键盘/滚轮交互</span></div>
+    <div class="stage">
+      <iframe src="works/p5-interactive.html" loading="lazy" title="流光画板"></iframe>
+      <div class="bar"><i></i>内嵌运行中 · 先在画面里按住鼠标拖动试试</div>
+    </div>
+
+    <div class="specs">
+      <div class="r"><span class="k">标题</span><span class="v"><strong>流光画板</strong></span></div>
+      <div class="r"><span class="k">一句话说明</span><span class="v">按住鼠标拖动会撒出发光粒子，粒子带惯性缓慢下坠；四套配色一键切换，滚轮实时调整笔刷粗细。</span></div>
+      <div class="r"><span class="k">创作思路</span><span class="v">粒子沿鼠标轨迹生长、漂移、淡出，用「叠加混合 + 半透明拖尾」做出流光质感；把配色、笔刷、清屏都做成即时反馈，让人玩着玩着就画出一幅完整的光绘。</span></div>
+      <div class="r"><span class="k">技术</span><span class="v">p5.js · 粒子系统 · blendMode(ADD) 叠加发光 · 鼠标 / 键盘 / 滚轮交互</span></div>
     </div>
   </section>
 
   <!-- ============ 作品三：Three.js 游戏 ============ -->
   <section class="work" id="w3">
-    <div class="work-tag">作品 03 · THREE.JS 小游戏</div>
-    <h2>星际虫潮</h2>
-    <p class="one-line">3D 打怪升级射击：WASD 走位、鼠标射击、升级三选一强化，每 5 波来一只 BOSS。</p>
-
-    <div class="frame-box">
-      <iframe src="works/game.html" loading="lazy" title="星际虫潮"></iframe>
-      <div class="frame-tip">内嵌运行中 · 记得先点击游戏画面，键盘才会生效</div>
+    <div class="sec-head">
+      <div class="idx">03</div>
+      <div>
+        <div class="tag">Three.js · 小游戏</div>
+        <h2>射击游戏</h2>
+        <p class="one-line">3D 打怪升级射击：WASD 走位、鼠标射击、升级三选一强化，每 5 波来一只 BOSS。</p>
+      </div>
     </div>
 
-    <div class="meta">
-      <div class="row"><span class="k">标　题</span><span class="v"><b>星际虫潮</b></span></div>
-      <div class="row"><span class="k">说　明</span><span class="v">在圆形竞技场里迎战虫群：击杀得经验、升级三选一强化卡，6 种敌人造型与行为各异，补给箱与连杀加成让节奏更紧。</span></div>
-      <div class="row"><span class="k">创作思路</span><span class="v">想做一个「上手十秒、一直变强」的小游戏：走位、射击、选卡三条循环拧在一起，强化卡可以组合出燃烧流、分裂流、光刃流等不同打法；模型全部用几何体实时拼装，单文件即可运行。</span></div>
-      <div class="row"><span class="k">技　术</span><span class="v">Three.js r160 · 鼠标射线瞄准 · 对象池（子弹/粒子/伤害数字） · 单文件零依赖</span></div>
+    <div class="stage">
+      <iframe src="works/game.html" loading="lazy" title="射击游戏"></iframe>
+      <div class="bar"><i></i>内嵌运行中 · 记得先点击游戏画面，键盘才会生效</div>
     </div>
-  </section>
 
-  <!-- ============ 关于我 ============ -->
-  <section id="about">
-    <div class="about-card">
-      <h3>关于我</h3>
-      <div class="about-item">
-        <div class="label">专业 / 年级</div>
-        <div class="value">数字媒体艺术专业 · 大二</div>
-      </div>
-      <div class="about-item">
-        <div class="label">感兴趣的方向</div>
-        <div class="value">生成艺术、创意编程、3D 互动叙事</div>
-      </div>
-      <div class="about-item">
-        <div class="label">一句话介绍</div>
-        <div class="value">喜欢用代码做出「会动的画面」，从一张生成海报到一款能玩的小游戏。</div>
-      </div>
-      <div class="about-item">
-        <div class="label">联系方式</div>
-        <div class="value"><a href="mailto:3050679585@qq.com">3050679585@qq.com</a></div>
-      </div>
+    <div class="specs">
+      <div class="r"><span class="k">标题</span><span class="v"><strong>射击游戏（星际虫潮）</strong></span></div>
+      <div class="r"><span class="k">一句话说明</span><span class="v">在圆形竞技场里迎战虫群：击杀得经验、升级三选一强化卡，6 种敌人造型与行为各异，补给箱与连杀加成让节奏更紧。</span></div>
+      <div class="r"><span class="k">创作思路</span><span class="v">想做一个「上手十秒、一直变强」的小游戏：走位、射击、选卡三条循环拧在一起，强化卡可以组合出燃烧流、分裂流、光刃流等不同打法；模型全部用几何体实时拼装，单文件即可运行。</span></div>
+      <div class="r"><span class="k">技术</span><span class="v">Three.js r160 · 鼠标射线瞄准 · 对象池（子弹 / 粒子 / 伤害数字） · 单文件零依赖</span></div>
     </div>
   </section>
 </main>
 
-<footer>鲁少俊 · 互动编程作品集 · 《互动编程》课程作业三</footer>
+<!-- ============ 关于我 ============ -->
+<div class="wrap">
+  <section id="about">
+    <div class="about-grid">
+      <div class="about-lead">关于我</div>
+      <div class="about-body">
+        <div class="row">
+          <span class="k">专业 / 年级</span>
+          <span class="v">数字媒体艺术专业 · 大二</span>
+        </div>
+        <div class="row">
+          <span class="k">感兴趣方向</span>
+          <span class="v">生成艺术、创意编程、3D 互动叙事</span>
+        </div>
+        <div class="row">
+          <span class="k">一句话</span>
+          <span class="v">喜欢用代码做出「会动的画面」，从一张生成海报到一款能玩的小游戏。</span>
+        </div>
+        <div class="row">
+          <span class="k">联系方式</span>
+          <span class="v"><a href="mailto:3050679585@qq.com">3050679585@qq.com</a></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>鲁少俊 · 互动编程作品集</span>
+    <span>《互动编程》课程作业三</span>
+  </footer>
+</div>
 
 </body>
 </html>
