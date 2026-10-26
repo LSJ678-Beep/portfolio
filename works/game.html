@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>作品三 · 星际虫潮（Three.js 游戏）</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #06080f; height: 100%; }
+  .wrap { display: flex; flex-direction: column; align-items: center; height: 100%; }
+  .hint {
+    padding: 10px 16px; font-size: 13px; color: #8ea3c4;
+    font-family: "Microsoft YaHei", sans-serif; letter-spacing: .04em;
+    background: rgba(94, 234, 212, .06);
+    border-bottom: 1px solid rgba(94, 234, 212, .12);
+  }
+  .hint b { color: #5eead4; font-weight: 600; }
+  iframe { flex: 1; width: 100%; border: 0; display: block; background: #06080f; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hint">
+    提示：游戏内嵌在网页里，先<b>点击一下游戏画面</b>，键盘才会生效 ——
+    <b>WASD</b> 移动 · <b>鼠标左键</b>射击 · <b>Shift/空格</b> 冲刺 · <b>Esc</b> 暂停
+  </div>
+  <!-- 全站内嵌：Three.js 单文件游戏 -->
+  <iframe src="../threejs-templates/游戏模板C-星际虫潮.html" allow="fullscreen"></iframe>
+</div>
+</body>
+</html>
