@@ -10,7 +10,7 @@
 | --- | --- | --- |
 | 夜色街区 · 生成海报 | p5.js 静态 | Perlin Noise、随机种子、noLoop |
 | 流光画板 | p5.js 交互 | 粒子系统、blendMode(ADD)、鼠标/键盘/滚轮 |
-| 星际虫潮 | Three.js 小游戏 | r160、鼠标射线瞄准、对象池 |
+| 秘林魔潮 | Three.js 小游戏 | r160、昼夜光照系统、InstancedMesh、对象池 |
 
 三个作品均以 iframe 内嵌在 `index.html` 中，站内即可直接体验；
 每个作品附四行说明：标题 / 一句话说明 / 创作思路 / 技术栈。
@@ -22,7 +22,7 @@ index.html                        作品集首页（含三个作品与关于我�
 works/
   ├─ p5-static.html               作品一：夜色街区（静态生成海报）
   ├─ p5-interactive.html          作品二：流光画板（交互粒子画板）
-  └─ game.html                    作品三：星际虫潮（内嵌游戏页）
+  └─ game.html                    作品三：秘林魔潮（内嵌游戏页）
 libs/
   ├─ p5.min.js                    p5.js 1.9.4（自托管）
 threejs-templates/
